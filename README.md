@@ -1,3 +1,3 @@
 # cpsc351-project
 
-Run ```g++ main.cpp -o mythreads -lpthread``` then ```./mythreads 5```
+Run ```g++ main.cpp -o multi-threaded-consumer -lpthread``` then ```./multi-threaded-consumer 5```
