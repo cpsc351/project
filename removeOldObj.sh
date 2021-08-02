@@ -1,1 +1,1 @@
-rm -f multi-threaded-consumer
+rm -f multi-threaded-consumer producer
