@@ -37,19 +37,24 @@ public:
   ~consumer() {}
 
   static void* threaded_pass(void* arg) {
-    cout << _rangeValues->at(2) << "\n";
+    //cout << _rangeValues->at(2) << "\n";
     //processing here
     for (int i = 1; i <= _rangeValues->at(0); i++) {
       //scan the stu
 
-      int maxIndex = (i) * (_rangeValues->at(0)) - 1; //inclusive
-      int minIndex = (i - 1) * (_rangeValues->at(0));
-      // for (int j = minIndex; j <= maxIndex; j++) {
-      //   if (_stu->at(j).email == email) {
-      //     int foundMinutes = stoi(_stu->at(j).endTime) - stoi(_stu->at(j).startTime);
-      //     cout << foundMinutes << "\n";
-      //   }
-      // } //i think this is the glitch RIGHT HERE FIX MEEEEE PLEASE FIX ME IM an AWWFUL BUG
+      int maxIndex = (i) * (_rangeValues->at(0)); //inclusive
+      int minIndex = 1;
+      minIndex = (i - 1) * (_rangeValues->at(0));
+      // if (i == 1) { minIndex = i * (_rangeValues->at(0)); }
+      // else { minIndex = (i - 1) * (_rangeValues->at(0)); }
+
+      cout << maxIndex << " " << minIndex << "\n";
+      for (int j = minIndex; j <= maxIndex; j++) {
+        if (_stu->at(j).email == email) {
+          int foundMinutes = stoi(_stu->at(j).endTime) - stoi(_stu->at(j).startTime);
+          cout << foundMinutes << "\n";
+        }
+      } //i think this is the glitch RIGHT HERE FIX MEEEEE PLEASE FIX ME IM an AWWFUL BUG
       if ( (_rangeValues->at(0)) * (_rangeValues->at(2)) + (_rangeValues->at(1)) == _stu->size() ) {
         //we are on the last thread
         //do the remaining searches equal to _rangeValues->at(1)
