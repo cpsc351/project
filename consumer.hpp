@@ -21,32 +21,34 @@ struct student {
     string endDate;
     string endTime;
 };
+vector<student> stu;
+
 class consumer {
 private:
   int _n = 1;
   string _email;
-  vector<student>& _stu;
+  vector<student>* _stu = &stu;
 public:
-  consumer(int n, string email, vector<student>& stu) : _n(n), _email(email), _stu(stu) {}
+  consumer(int n, string email) : _n(n), _email(email) {}
   //consumer() {}
   ~consumer() {}
-  // void* threaded_pass(void* me) {
-  //   size_t x = _stu.size();
-  //   cout << x;
-  //   pthread_exit(0);
-  // }
-  // static void* threaded_pass_wrapper(consumer* object){
+  static void* threaded_pass(void* me) {
+    int x = 1;
+    cout << x;
+    pthread_exit(0);
+  }
+  // static void* threaded_pass_wrapper(void* object){
   //       static_cast<consumer>(object).threaded_pass;
   //       return 0;
   // }
   void execute() {
-    cout << _stu.size();
-    // pthread_t threads[_n];
-    // for (int i = 0; i <= _n; i++) {
-    //   pthread_create(&threads[i], NULL, threaded_pass_wrapper, this);
-    // }
-    // for (int i = 0; i <= _n; i++) {
-    //   pthread_join(threads[i], NULL);
-    //}
+    cout << _stu->size();
+    pthread_t threads[_n];
+    for (int i = 1; i <= _n; i++) {
+      pthread_create(&threads[i], NULL, &consumer::threaded_pass, this);
+    }
+    for (int i = 1; i <= _n; i++) {
+      pthread_join(threads[i], NULL);
+    }
   }
 };

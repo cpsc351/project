@@ -19,12 +19,12 @@ using namespace std;
 //     string endDate;
 //     string endTime;
 // };
-vector<student> stu;
+//vector<student> stu;
 void parseText(string line, vector<student>& stu);
 
 int main(int argc, char *argv[]) {
   if (argc < 4) { cout << "Provide enough command line arguments"; }
-  consumer threaded(stoi(argv[3]), argv[2], stu);
+  consumer threaded(stoi(argv[3]), argv[2]);
   ifstream zoomreport;
   ofstream studentreport;
   string line;
