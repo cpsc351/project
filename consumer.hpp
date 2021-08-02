@@ -27,13 +27,13 @@ class consumer {
 private:
   int _n = 1;
   string _email;
-  vector<student>* _stu = &stu;
+  static constexpr vector<student>* _stu = &stu;
 public:
   consumer(int n, string email) : _n(n), _email(email) {}
   //consumer() {}
   ~consumer() {}
   static void* threaded_pass(void* me) {
-    int x = 1;
+    size_t x = _stu->size();
     cout << x;
     pthread_exit(0);
   }
