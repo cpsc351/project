@@ -10,16 +10,7 @@
 #include "consumer.hpp"
 using namespace std;
 
-// mutex zoomReport, studentReport, stuLock;
 
-// struct student {
-//     string email;
-//     string startDate;
-//     string startTime;
-//     string endDate;
-//     string endTime;
-// };
-//vector<student> stu;
 void parseText(string line, vector<student>& stu);
 
 int main(int argc, char *argv[]) {
@@ -29,7 +20,7 @@ int main(int argc, char *argv[]) {
   ofstream studentreport;
   string line;
   zoomReport.lock();
-  zoomreport.open("Zoomreport.txt");
+  zoomreport.open(argv[1]);
   studentReport.lock();
   studentreport.open("studentreport.txt");
   stuLock.lock();
