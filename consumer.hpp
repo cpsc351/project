@@ -41,10 +41,18 @@ public:
     //processing here
     for (int i = 1; i <= _rangeValues->at(0); i++) {
       //scan the stu
+      int maxSize = (int)_stu->size();
+      int maxIndex = 0;
+      int minIndex = 0;
+      // maxIndex = (i) * (_rangeValues->at(0));
+      // minIndex = (i - 1) * (_rangeValues->at(0));
 
-      int maxIndex = (i) * (_rangeValues->at(0)); //inclusive
-      int minIndex = 1;
-      minIndex = (i - 1) * (_rangeValues->at(0));
+      //maxIndex--; //inclusive
+      // at 0 corresponts to how many elements we must search
+      // at 1 corresponds to the elemnts left after n equal searches (remainder)
+      // at 2 corresponds to the number of threads and searches to do
+
+
       // if (i == 1) { minIndex = i * (_rangeValues->at(0)); }
       // else { minIndex = (i - 1) * (_rangeValues->at(0)); }
 
@@ -52,7 +60,7 @@ public:
       for (int j = minIndex; j <= maxIndex; j++) {
         if (_stu->at(j).email == email) {
           int foundMinutes = stoi(_stu->at(j).endTime) - stoi(_stu->at(j).startTime);
-          cout << foundMinutes << "\n";
+          //cout << foundMinutes << "\n";
         }
       } //i think this is the glitch RIGHT HERE FIX MEEEEE PLEASE FIX ME IM an AWWFUL BUG
       if ( (_rangeValues->at(0)) * (_rangeValues->at(2)) + (_rangeValues->at(1)) == _stu->size() ) {
@@ -63,7 +71,7 @@ public:
           int remainderSearchIndexEnd = (_stu->size()) - 1;
           if (_stu->at(remainderSearchIndexStart + k - 1).email == email) {
             int foundMinutes = stoi(_stu->at(k).endTime) - stoi(_stu->at(k).startTime);
-            cout << foundMinutes << "\n";
+            //cout << foundMinutes << "\n";
           }
           cout << "this should print equivalent to rangeValues(1) times\n";
         }
