@@ -7,14 +7,15 @@
 #include <string>
 #include <sstream>
 #include <mutex>
+#include <memory>
 #include <array>
-//#include "producer.cpp"
+
 using namespace std;
 
-//mutex mtx;
-mutex zoomReport, studentReport, stuLock, tresLock;
 
-//void* threaded_pass(void* argument);
+mutex zoomReport, studentReport, stuLock, rangeValuesLock;
+
+
 struct student {
     string email;
     string startDate;
@@ -24,24 +25,36 @@ struct student {
 };
 vector<student> stu;
 array<int, 3> myarray = {0, 0, 0};
+// string email = "";
+
 
 class consumer {
 private:
   int _n = 1;
   string _email;
   static constexpr vector<student>* _stu = &stu;
-  static constexpr array<int, 3>* _tres = &myarray;
+  static constexpr array<int, 3>* _rangeValues = &myarray;
+  //static shared_ptr<string> _emailHandle = make_shared<string>(email.c_str());
 public:
-  consumer(int n, string email) : _n(n), _email(email) {}
+  consumer(int n, string emailInput) : _n(n), _email(emailInput) {
+    //*_emailHandle = _email;
+  }
   //consumer() {}
   ~consumer() {}
   static void* threaded_pass(void* arg) {
-    //size_t x = _stu->size();
-    //cout << x << "\n";
-    //cout << _tres->at(0) << _tres->at(1) << _tres->at(2) << "\n";
-    //tresLock.lock();
-    cout << _tres->at(2) << "\n";
-    tresLock.unlock();
+    cout << _rangeValues->at(2) << "\n";
+    //processing here
+    for (int i = 1; i <= _rangeValues->at(0); i++) {
+      //scan the stu
+      if ( (_rangeValues->at(0)) * (_rangeValues->at(2)) + (_rangeValues->at(1)) == _stu->size() ) {
+        //we are on the last thread
+        //do the remaining searches equal to _rangeValues->at(1)
+        for (int i = 1; i <= _rangeValues->at(1); i++) {
+          cout << "this should print equivalent to rangeValues(1) times\n";
+        }
+      }
+    }
+    rangeValuesLock.unlock();
     //pthread_exit(0);
     return 0;
   }
@@ -50,20 +63,18 @@ public:
   //       return 0;
   // }
   void execute() {
-    //cout << _stu->size();
     int baseRange = _stu->size()/_n;
     int remainderRange = _stu->size()%_n;
-    *_tres = {baseRange, remainderRange, 1};
+    *_rangeValues = {baseRange, remainderRange, 1};
     pthread_t threads[_n];
     for (int i = 1; i <= _n; i++) {
-      tresLock.lock();
+      rangeValuesLock.lock();
       pthread_create(&threads[i], NULL, &consumer::threaded_pass, NULL);
-      //tresLock.unlock();
-      _tres->at(2) = i;
+      _rangeValues->at(2) = i;
     }
     for (int i = 1; i <= _n; i++) {
       pthread_join(threads[i], NULL);
     }
-    cout << _tres->at(0) << _tres->at(1) << _tres->at(2) << "\n";
+    cout << _rangeValues->at(0) << _rangeValues->at(1) << _rangeValues->at(2) << "\n";
   }
 };
