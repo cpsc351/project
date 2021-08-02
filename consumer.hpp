@@ -35,12 +35,14 @@ private:
   static constexpr vector<student>* _stu = &stu;
   static constexpr array<int, 3>* _rangeValues = &myarray;
   //static shared_ptr<string> _emailHandle = make_shared<string>(email.c_str());
+  static string email;
 public:
   consumer(int n, string emailInput) : _n(n), _email(emailInput) {
-    //*_emailHandle = _email;
+    email = emailInput;
   }
   //consumer() {}
   ~consumer() {}
+
   static void* threaded_pass(void* arg) {
     cout << _rangeValues->at(2) << "\n";
     //processing here
@@ -78,3 +80,4 @@ public:
     cout << _rangeValues->at(0) << _rangeValues->at(1) << _rangeValues->at(2) << "\n";
   }
 };
+string consumer::email = "";
