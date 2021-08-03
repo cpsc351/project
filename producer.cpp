@@ -17,12 +17,12 @@ int main(int argc, char *argv[]) {
   if (argc < 4) { cout << "Provide enough command line arguments"; }
   consumer threaded(stoi(argv[3]), argv[2]);
   ifstream zoomreport;
-  ofstream studentreport;
+  //ofstream studentreport;
   string line;
   zoomReport.lock();
   zoomreport.open(argv[1]);
   studentReport.lock();
-  studentreport.open("studentreport.txt");
+  // studentreport.open("studentreport.txt");
   stuLock.lock();
   while(getline(zoomreport, line)) {
       parseText(line, stu);
@@ -30,12 +30,12 @@ int main(int argc, char *argv[]) {
   stuLock.unlock();
   zoomreport.close();
   zoomReport.unlock();
-  stuLock.lock();
-  for(size_t i = 0; i < stu.size(); i++)
-    studentreport << stu[i].email << stu[i].startDate << stu[i].startTime << stu[i].endDate << stu[i].endTime << '\n';
-  stuLock.unlock();
-  studentreport.close();
-  studentReport.unlock();
+  // stuLock.lock();
+  // for(size_t i = 0; i < stu.size(); i++)
+  //   studentreport << stu[i].email << stu[i].startDate << stu[i].startTime << stu[i].endDate << stu[i].endTime << '\n';
+  // stuLock.unlock();
+  // studentreport.close();
+  // studentReport.unlock();
   threaded.execute();
   return 0;
 }
