@@ -9,6 +9,12 @@
 #include <mutex>
 #include <memory>
 #include <array>
+#include <cstring>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+#define SHARESIZE 1000
 
 using namespace std;
 
@@ -21,7 +27,7 @@ struct student {
     string endTime;
 };
 //vector<student> stu;
-student* _stu = new student[6];                               //hardcoded 6
+student* _stu;
 
 array<int, 4> myarray = {0, 0, 0, 0};
 int foundMinutes = 0;
@@ -34,6 +40,9 @@ static constexpr array<int, 4>* _rangeValues = &myarray;
 static constexpr int* _foundMinutes = &foundMinutes;
 //static string email;
 string email;
+
+
+
 
 int readTime(string time1) {
   // time.erase(2, 1);
@@ -94,10 +103,31 @@ void* threaded_pass(void* arg) {
     return 0;
 }
 int main(int argc, char* argv[]) {
+  int shmid;
+  key_t key = 886699586;
+  void* shm;
+  shmid = shmget(key, SHARESIZE, 0666);
+  if (shmid < 0) {
+    cout << "error in shmget\n";
+    exit(1);
+  }
+  shm = shmat(shmid, NULL, 0);
+  if (shm == (char*)-1) {
+    cout << "error in shmat\n";
+    exit(1);
+  }
+
+  _stu = (student*)shm;
+  cout << _stu->email << " result\n";
+  //int arraySize = *_stu.size();
   email = argv[1];
   _n = stoi(argv[2]);
+
+  // int baseRange = arraySize/_n;                                //hardcoded 6
+  // int remainderRange = arraySize%_n;                           //hardcoded 6
   int baseRange = 6/_n;                                //hardcoded 6
   int remainderRange = 6%_n;                           //hardcoded 6
+
   *_rangeValues = {baseRange, remainderRange, _n, 1};
   pthread_t threads[_n];
   studentreport.open("studentreport.txt");
@@ -113,4 +143,6 @@ int main(int argc, char* argv[]) {
   cout << *_foundMinutes << " minutes found.\n";
   studentreport << *_foundMinutes << " total minutes found.\n";
   studentreport.close();
+  shmdt(shm);
+  return 0;
 }

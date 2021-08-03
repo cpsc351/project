@@ -62,6 +62,7 @@ int main(int argc, char *argv[]) {
   zoomreport.close();
   zoomreport.open(argv[1]);
   student* stu = new student[number_of_lines];
+  //array<student, number_of_lines> stu;
   int i = 0;
   while(getline(zoomreport, line)) {
       parseText(line, stu, i);
@@ -79,6 +80,7 @@ int main(int argc, char *argv[]) {
   // studentreport.close();
   // studentReport.unlock();
   //threaded.execute();
+  shmdt(shm);
   return 0;
 }
 void parseText(string line, student stu[], int index) {
