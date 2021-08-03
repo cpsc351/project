@@ -7,7 +7,7 @@
 #include <string>
 #include <sstream>
 #include <mutex>
-#include "consumer.cpp"
+//#include "consumer.cpp"
 using namespace std;
 
 mutex zoomReport;
