@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     //*NEW* PUSH TO ARRAY OF STRINGS
     newStudent[i] = line;
     newStudent[i].push_back('\n');
-    cout << newStudent[i];
+    //cout << newStudent[i];
     //REGULAR CODE
     parseText(line, stu, i);
     i++;
@@ -92,7 +92,8 @@ int main(int argc, char *argv[]) {
   for (int i = 0; i < number_of_lines; i++) {
     memcpy(shm, &newStudent[i], newStudent[i].size());
     //cout << stu[i].email << " " << &stu[i] << "\n";
-    //cout << newStudent[i];
+    cout << &newStudent[i] << " ";
+    cout << newStudent[i];
     pusher+=newStudent[i].size();
   }
   *pusher = EOF;
