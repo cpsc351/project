@@ -2,75 +2,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-//#include <vector>
+#include <vector>
 #include <fstream>
 #include <string>
-#include <cstring>
 #include <sstream>
 #include <mutex>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-
-#define SHARESIZE 1000
-
-//#include "consumer.cpp"
+#include "consumer.hpp"
 using namespace std;
 
-mutex zoomReport;
 
-
-struct student {
-    string startDate;
-    string email;
-    string startTime;
-    string endDate;
-    string endTime;
-};
-void parseText(string line, student stu[], int i);
+void parseText(string line, vector<student>& stu);
 
 int main(int argc, char *argv[]) {
-  if (argc < 2) { cout << "Provide enough command line arguments"; }
-  int shmid;
-  key_t key;
-  void* shm;
-  key = 886699586;
-  shmid = shmget(key, SHARESIZE, IPC_CREAT | 0666);
-  if (shmid < 0) {
-    cout << "error in shmget\n";
-    exit(1);
-  }
-  shm = shmat(shmid, NULL, 0);
-  if (shm == (char*)-1) {
-    cout << "error in shmat\n";
-    exit(1);
-  }
-
-  // consumer threaded(stoi(argv[3]), argv[2]);
+  if (argc < 4) { cout << "Provide enough command line arguments"; }
+  consumer threaded(stoi(argv[3]), argv[2]);
   ifstream zoomreport;
   //ofstream studentreport;
   string line;
   zoomReport.lock();
   zoomreport.open(argv[1]);
-  //studentReport.lock();
+  studentReport.lock();
   // studentreport.open("studentreport.txt");
-  //stuLock.lock();
-  int number_of_lines = 0;
-  while (getline(zoomreport, line)) {
-    ++number_of_lines;
-  }
-  zoomreport.close();
-  zoomreport.open(argv[1]);
-  student* stu = new student[number_of_lines];
-  //array<student, number_of_lines> stu;
-  int i = 0;
+  stuLock.lock();
   while(getline(zoomreport, line)) {
-      parseText(line, stu, i);
-      i++;
+      parseText(line, stu);
   }
-  memcpy(shm, stu, number_of_lines);
-
-  //stuLock.unlock();
+  stuLock.unlock();
   zoomreport.close();
   zoomReport.unlock();
   // stuLock.lock();
@@ -79,11 +36,10 @@ int main(int argc, char *argv[]) {
   // stuLock.unlock();
   // studentreport.close();
   // studentReport.unlock();
-  //threaded.execute();
-  shmdt(shm);
+  threaded.execute();
   return 0;
 }
-void parseText(string line, student stu[], int index) {
+void parseText(string line, vector<student>& stu) {
     string delimiter = " ";
     student studentStruct;
     string arr[5];
@@ -102,5 +58,5 @@ void parseText(string line, student stu[], int index) {
 
     //cout << "email: " << studentStruct.email << endl << "start date: " << studentStruct.startDate << endl << "start time: " << studentStruct.startTime << endl << "end date: " << studentStruct.endDate << endl << "end time: " << studentStruct.endTime << endl << endl;
 
-    stu[index] = (studentStruct);
+    stu.push_back(studentStruct);
 }

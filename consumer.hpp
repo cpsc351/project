@@ -23,6 +23,7 @@ struct student {
 vector<student> stu;
 array<int, 4> myarray = {0, 0, 0, 0};
 int foundMinutes = 0;
+ofstream studentreport;
 
 class consumer {
 private:
@@ -61,7 +62,7 @@ public:
     int lastThreadChecker = _rangeValues->at(3);
 
     cout << lastThreadChecker;
-    cout << "compared to " << _rangeValues->at(2) << "\n";
+    cout << " is the current thread compared to total of " << _rangeValues->at(2) << "\n";
 
     if (lastThreadChecker == _rangeValues->at(2)) {
       maxIndex += _rangeValues->at(1);
@@ -69,6 +70,8 @@ public:
     for (int j = minIndex; j <= maxIndex; j++) {
         if (_stu->at(j).email == email) {
           // *_foundMinutes += readTime(_stu->at(j).endTime) - readTime(_stu->at(j).startTime);
+          //studentReport.lock();
+          studentReport.try_lock();
           int endTime1 = readTime(_stu->at(j).endTime);
           // string endTime2 = endTime1;
           // endTime1.erase(2, 2);
@@ -82,9 +85,12 @@ public:
           // startTime1 = startTime1 * 60;
           // startTime2 += startTime1;
           *_foundMinutes += endTime1 - startTime1;
+
+          studentreport << _stu->at(j).email << " " << _stu->at(j).endDate << " " << endTime1 - startTime1 << " minutes.\n";
+          studentReport.unlock();
         }
         cout << "just searched vect index = " << j << "\n";
-        cout << *_foundMinutes << "\n";
+        cout << *_foundMinutes << " total minutes found.\n";
       }
       (_rangeValues->at(3))++;
       rangeValuesLock.unlock();
@@ -95,6 +101,7 @@ public:
     int remainderRange = _stu->size()%_n;
     *_rangeValues = {baseRange, remainderRange, _n, 1};
     pthread_t threads[_n];
+    studentreport.open("studentreport.txt");
     for (int i = 1; i <= _n; i++) {
       rangeValuesLock.lock();
       pthread_create(&threads[i], NULL, &consumer::threaded_pass, NULL);
@@ -102,8 +109,10 @@ public:
     for (int i = 1; i <= _n; i++) {
       pthread_join(threads[i], NULL);
     }
-    cout << _rangeValues->at(0) << _rangeValues->at(1) << _rangeValues->at(2) << _rangeValues->at(3) << " rangeValues\n";
+    //cout << _rangeValues->at(0) << _rangeValues->at(1) << _rangeValues->at(2) << _rangeValues->at(3) << " rangeValues\n";
     cout << *_foundMinutes << " minutes found.\n";
+    studentreport << *_foundMinutes << " total minutes found.\n";
+    studentreport.close();
   }
 };
 string consumer::email = "";
