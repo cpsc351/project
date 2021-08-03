@@ -22,6 +22,7 @@ struct student {
 };
 vector<student> stu;
 array<int, 4> myarray = {0, 0, 0, 0};
+int foundMinutes = 0;
 
 class consumer {
 private:
@@ -29,13 +30,28 @@ private:
   string _email;
   static constexpr vector<student>* _stu = &stu;
   static constexpr array<int, 4>* _rangeValues = &myarray;
+  static constexpr int* _foundMinutes = &foundMinutes;
   static string email;
 public:
   consumer(int n, string emailInput) : _n(n), _email(emailInput) {
     email = emailInput;
   }
   ~consumer() {}
-
+  static int readTime(string time1) {
+    // time.erase(2, 1);
+    // int result = stoi(time);
+    // string endTime2 = endTime1;
+    string time2 = time1;
+    time1.erase(2, 3);
+    time2.erase(0, 3);
+    cout << time1 << ":" << time2 << "\n";
+    int time11 = stoi(time1);
+    int time22 = stoi(time2);
+    time11 = time11 * 60;
+    time22 += time11;
+    cout << time22 << " minutes\n";
+    return time22;
+  }
   static void* threaded_pass(void* arg) {
     int maxIndex = 0;
     int minIndex = 0;
@@ -52,9 +68,23 @@ public:
     }
     for (int j = minIndex; j <= maxIndex; j++) {
         if (_stu->at(j).email == email) {
-          int foundMinutes = stoi(_stu->at(j).endTime) - stoi(_stu->at(j).startTime);
+          // *_foundMinutes += readTime(_stu->at(j).endTime) - readTime(_stu->at(j).startTime);
+          int endTime1 = readTime(_stu->at(j).endTime);
+          // string endTime2 = endTime1;
+          // endTime1.erase(2, 2);
+          // endTime2.erase(0, 2);
+          // endTime1 = endTime1 * 60;
+          // endTime2 += endTime1;
+          int startTime1 = readTime(_stu->at(j).startTime);
+          // int startTime2 = endTime1;
+          // startTime1.erase(2, 2);
+          // startTime2.erase(0, 2);
+          // startTime1 = startTime1 * 60;
+          // startTime2 += startTime1;
+          *_foundMinutes += endTime1 - startTime1;
         }
         cout << "just searched vect index = " << j << "\n";
+        cout << *_foundMinutes << "\n";
       }
       (_rangeValues->at(3))++;
       rangeValuesLock.unlock();
@@ -73,6 +103,7 @@ public:
       pthread_join(threads[i], NULL);
     }
     cout << _rangeValues->at(0) << _rangeValues->at(1) << _rangeValues->at(2) << _rangeValues->at(3) << " rangeValues\n";
+    cout << *_foundMinutes << " minutes found.\n";
   }
 };
 string consumer::email = "";
