@@ -120,6 +120,7 @@ int main(int argc, char* argv[]) {
     //memoryReader.push_back(*shmCopy);
     // char y = *shmCopy;
     // memoryReader[x] = atoi(y);
+    cout << *shmCopy;
     if (*shmCopy == '\n') {
         x++;
     }
