@@ -35,7 +35,7 @@ string _email;
 static constexpr array<int, 4>* _rangeValues = &myarray;
 static constexpr int* _foundMinutes = &foundMinutes;
 string email;
-
+//int* star;
 
 int readTime(string hours) {
   string minutes = hours;
@@ -96,7 +96,9 @@ int main(int argc, char* argv[]) {
   //(student*)copy = (student*) shm;
   student* shmCopy = (student*)shm;
   for (int i = 0; i < 7; i++) {                            //hardcoded 7
-    memcpy(&_stu[i], shmCopy, 64);
+    memcpy(&_stu[i], shm, 64);
+    // memcpy(&star[i], shmCopy, 64);
+    // _stu[i] = (student*)star[i];
     cout << _stu[i].email << " " << &_stu[i] << "\n";
     shmCopy++;
   }
@@ -110,11 +112,10 @@ int main(int argc, char* argv[]) {
   // int remainderRange = arraySize%_n;
   int baseRange = 6/_n;                                //hardcoded 6
   int remainderRange = 6%_n;                           //hardcoded 6
-  
+
   *_rangeValues = {baseRange, remainderRange, _n, 1};
   pthread_t threads[_n];
   studentreport.open("studentreport.txt");
-
   for (int i = 1; i <= _n; i++) {
     rangeValuesLock.lock();
     pthread_create(&threads[i], NULL, threaded_pass, NULL);
