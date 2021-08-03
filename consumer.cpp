@@ -103,7 +103,9 @@ void* threaded_pass(void* arg) {
     return 0;
 }
 int main(int argc, char* argv[]) {
+  //cout << "hello world";
   int shmid;
+  //cout << "next line works";
   key_t key = 886699586;
   void* shm;
   shmid = shmget(key, SHARESIZE, 0666);
@@ -116,15 +118,23 @@ int main(int argc, char* argv[]) {
     cout << "error in shmat\n";
     exit(1);
   }
-
-  _stu = (student*)shm;
-  cout << _stu->email << " result\n";
+  //cout << "next line fails";
+  //memcpy(shm, _stu, 6);                                  // hardcoded 6
+  //(student*)copy = (student*) shm;
+  student* shmCopy = (student*)shm;
+  for (int i = 0; i < 7; i++) {                            //hardcoded 7
+    memcpy(&_stu[i], shmCopy, 64);
+    cout << _stu[i].email << " " << &_stu[i] << "\n";
+    shmCopy++;
+  }
+  //cout << (int*)shm;
+  //cout << _stu->endDate << " result\n";
   //int arraySize = *_stu.size();
   email = argv[1];
   _n = stoi(argv[2]);
 
-  // int baseRange = arraySize/_n;                                //hardcoded 6
-  // int remainderRange = arraySize%_n;                           //hardcoded 6
+  // int baseRange = arraySize/_n;
+  // int remainderRange = arraySize%_n;
   int baseRange = 6/_n;                                //hardcoded 6
   int remainderRange = 6%_n;                           //hardcoded 6
 

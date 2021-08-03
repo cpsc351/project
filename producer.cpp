@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     cout << "error in shmget\n";
     exit(1);
   }
-  shm = shmat(shmid, NULL, 0);
+  shm = shmat(shmid, (void*)0, 0);
   if (shm == (char*)-1) {
     cout << "error in shmat\n";
     exit(1);
@@ -65,10 +65,17 @@ int main(int argc, char *argv[]) {
   //array<student, number_of_lines> stu;
   int i = 0;
   while(getline(zoomreport, line)) {
-      parseText(line, stu, i);
-      i++;
+    parseText(line, stu, i);
+    i++;
   }
-  memcpy(shm, stu, number_of_lines);
+  //put it in shared memory here
+  //student* copy = (student*) shm;
+  for (int i = 0; i < number_of_lines; i++) {
+    memcpy(shm, &(stu[i]), 64);
+    cout << stu[i].email << " " << &stu[i] << "\n";
+  }
+
+  //memcpy(shm, stu, number_of_lines);
 
   //stuLock.unlock();
   zoomreport.close();
@@ -81,6 +88,9 @@ int main(int argc, char *argv[]) {
   // studentReport.unlock();
   //threaded.execute();
   shmdt(shm);
+
+
+  //shmctl(shmid, IPC_RMID, NULL);
   return 0;
 }
 void parseText(string line, student stu[], int index) {
@@ -103,4 +113,5 @@ void parseText(string line, student stu[], int index) {
     //cout << "email: " << studentStruct.email << endl << "start date: " << studentStruct.startDate << endl << "start time: " << studentStruct.startTime << endl << "end date: " << studentStruct.endDate << endl << "end time: " << studentStruct.endTime << endl << endl;
 
     stu[index] = (studentStruct);
+    //cout << stu[index].email;
 }
