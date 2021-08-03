@@ -12,7 +12,15 @@ using namespace std;
 
 mutex zoomReport;
 
-void parseText(string line, vector<student>& stu);
+
+struct student {
+    string startDate;
+    string email;
+    string startTime;
+    string endDate;
+    string endTime;
+};
+void parseText(string line, student stu[], int i);
 
 int main(int argc, char *argv[]) {
   if (argc < 2) { cout << "Provide enough command line arguments"; }
@@ -22,13 +30,22 @@ int main(int argc, char *argv[]) {
   string line;
   zoomReport.lock();
   zoomreport.open(argv[1]);
-  studentReport.lock();
+  //studentReport.lock();
   // studentreport.open("studentreport.txt");
-  stuLock.lock();
-  while(getline(zoomreport, line)) {
-      parseText(line, stu);
+  //stuLock.lock();
+  int number_of_lines = 0;
+  while (getline(zoomreport, line)) {
+    ++number_of_lines;
   }
-  stuLock.unlock();
+  zoomreport.close();
+  zoomreport.open(argv[1]);
+  student* stu = new student[number_of_lines];
+  int i = 0;
+  while(getline(zoomreport, line)) {
+      parseText(line, stu, i);
+      i++;
+  }
+  //stuLock.unlock();
   zoomreport.close();
   zoomReport.unlock();
   // stuLock.lock();
@@ -40,7 +57,7 @@ int main(int argc, char *argv[]) {
   //threaded.execute();
   return 0;
 }
-void parseText(string line, vector<student>& stu) {
+void parseText(string line, student stu[], int index) {
     string delimiter = " ";
     student studentStruct;
     string arr[5];
@@ -59,5 +76,5 @@ void parseText(string line, vector<student>& stu) {
 
     //cout << "email: " << studentStruct.email << endl << "start date: " << studentStruct.startDate << endl << "start time: " << studentStruct.startTime << endl << "end date: " << studentStruct.endDate << endl << "end time: " << studentStruct.endTime << endl << endl;
 
-    stu.push_back(studentStruct);
+    stu[index] = (studentStruct);
 }
