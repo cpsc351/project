@@ -7,16 +7,15 @@
 #include <string>
 #include <sstream>
 #include <mutex>
-#include "consumer.cpp"
+#include "consumer.hpp"
 using namespace std;
 
-mutex zoomReport;
 
 void parseText(string line, vector<student>& stu);
 
 int main(int argc, char *argv[]) {
-  if (argc < 2) { cout << "Provide enough command line arguments"; }
-  // consumer threaded(stoi(argv[3]), argv[2]);
+  if (argc < 4) { cout << "Provide enough command line arguments"; }
+  consumer threaded(stoi(argv[3]), argv[2]);
   ifstream zoomreport;
   //ofstream studentreport;
   string line;
@@ -37,7 +36,7 @@ int main(int argc, char *argv[]) {
   // stuLock.unlock();
   // studentreport.close();
   // studentReport.unlock();
-  //threaded.execute();
+  threaded.execute();
   return 0;
 }
 void parseText(string line, vector<student>& stu) {
