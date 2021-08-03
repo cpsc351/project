@@ -20,14 +20,16 @@ struct student {
     string endDate;
     string endTime;
 };
-vector<student> stu;
+//vector<student> stu;
+student* _stu = new student[6];                               //hardcoded 6
+
 array<int, 4> myarray = {0, 0, 0, 0};
 int foundMinutes = 0;
 ofstream studentreport;
 
 int _n = 1;
 string _email;
-static constexpr vector<student>* _stu = &stu;
+//student* _stu[] = &stu;
 static constexpr array<int, 4>* _rangeValues = &myarray;
 static constexpr int* _foundMinutes = &foundMinutes;
 //static string email;
@@ -63,17 +65,17 @@ void* threaded_pass(void* arg) {
     maxIndex += _rangeValues->at(1);
   }
   for (int j = minIndex; j <= maxIndex; j++) {
-      if (_stu->at(j).email == email) {
-        // *_foundMinutes += readTime(_stu->at(j).endTime) - readTime(_stu->at(j).startTime);
+      if (_stu[j].email == email) {
+        // *_foundMinutes += readTime(_stu[j].endTime) - readTime(_stu[j].startTime);
         //studentReport.lock();
         studentReport.try_lock();
-        int endTime1 = readTime(_stu->at(j).endTime);
+        int endTime1 = readTime(_stu[j].endTime);
         // string endTime2 = endTime1;
         // endTime1.erase(2, 2);
         // endTime2.erase(0, 2);
         // endTime1 = endTime1 * 60;
         // endTime2 += endTime1;
-        int startTime1 = readTime(_stu->at(j).startTime);
+        int startTime1 = readTime(_stu[j].startTime);
         // int startTime2 = endTime1;
         // startTime1.erase(2, 2);
         // startTime2.erase(0, 2);
@@ -81,7 +83,7 @@ void* threaded_pass(void* arg) {
         // startTime2 += startTime1;
         *_foundMinutes += endTime1 - startTime1;
 
-        studentreport << _stu->at(j).email << " " << _stu->at(j).endDate << " " << endTime1 - startTime1 << " minutes.\n";
+        studentreport << _stu[j].email << " " << _stu[j].endDate << " " << endTime1 - startTime1 << " minutes.\n";
         studentReport.unlock();
       }
       cout << "just searched vect index = " << j << "\n";
@@ -94,8 +96,8 @@ void* threaded_pass(void* arg) {
 int main(int argc, char* argv[]) {
   email = argv[1];
   _n = stoi(argv[2]);
-  int baseRange = _stu->size()/_n;
-  int remainderRange = _stu->size()%_n;
+  int baseRange = 6/_n;                                //hardcoded 6
+  int remainderRange = 6%_n;                           //hardcoded 6
   *_rangeValues = {baseRange, remainderRange, _n, 1};
   pthread_t threads[_n];
   studentreport.open("studentreport.txt");
