@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
   //NORMAL STUDENT STRUCT VARIABLE
   student* stu = new student[number_of_lines];
 
-  //*NEW* CREATE ARRAY OF STRINGS OF FIXED SIZE SINCE VECTOR CANT BE STORED IN 
+  //*NEW* CREATE ARRAY OF STRINGS OF FIXED SIZE SINCE VECTOR CANT BE STORED IN
   //MEMORY WITHOUT BOOST LIBRARY
   string newStudent[number_of_lines];
 
@@ -71,7 +71,8 @@ int main(int argc, char *argv[]) {
   while(getline(zoomreport, line)) {
     //*NEW* PUSH TO ARRAY OF STRINGS
     newStudent[i] = line;
-
+    newStudent[i].push_back('\n');
+    cout << newStudent[i];
     //REGULAR CODE
     parseText(line, stu, i);
     i++;
@@ -81,14 +82,20 @@ int main(int argc, char *argv[]) {
   for (int i = 0; i < number_of_lines; i++) {
     getEmailFromArrOfStrings(newStudent[i]);
   }
-  
+
 
   //put it in shared memory here
   //student* copy = (student*) shm;
+  char* pusher;
+  pusher = (char*)shm;
+
   for (int i = 0; i < number_of_lines; i++) {
-    memcpy(shm, &(stu[i]), 64);
-    cout << stu[i].email << " " << &stu[i] << "\n";
+    memcpy(shm, &newStudent[i], newStudent[i].size());
+    //cout << stu[i].email << " " << &stu[i] << "\n";
+    //cout << newStudent[i];
+    pusher+=newStudent[i].size();
   }
+  *pusher = EOF;
   //memcpy(shm, stu, number_of_lines);
 
   zoomreport.close();
@@ -120,7 +127,7 @@ void parseText(string line, student stu[], int index) {
 }
 
 
-//*NEW* FUNCTION TO BE USED IN CONSUMER AFTER DATA IS RETREIVED 
+//*NEW* FUNCTION TO BE USED IN CONSUMER AFTER DATA IS RETREIVED
 //FROM SHARED MEM,ONLY PRINTS FOR TESTING PURPOSES INSTEAD OF RETURNING
 void getEmailFromArrOfStrings(string line) {
   string delimiter = " ";
@@ -133,6 +140,6 @@ void getEmailFromArrOfStrings(string line) {
     ++i;
   }
 
-  cout << arr[0] << "\n";
+  //cout << arr[0] << "\n";
 
 }
