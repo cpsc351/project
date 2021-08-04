@@ -126,10 +126,21 @@ int main(int argc, char* argv[]) {
   //       x++;
   //   }
   // }
+  string memoryReader = "";
+  int index = 0;
   cout << "consumer recieved: \n";                    //works on hello world basic
   for (shmCopy = (char*)shm; *shmCopy != EOF; shmCopy++) {                    //works on hello world basic
-    printf("%c", *shmCopy);                                        //works on hello world basic
+    //printf("%c", *shmCopy);                                        //works on hello world basic
+    memoryReader.push_back(*shmCopy);
+    if (*shmCopy == '\n') {
+      index++;
+    }
   }                                                           //works on hello world basic
+  string inputArray[index];
+  for (int x = 0; x < index; x++) {
+    // make the array meaningful TODO
+  }
+  cout << memoryReader << "\nindex is " << index;
   cout << "\n and thats the end.\n";                    //works on hello world basic
 
   //for (x = 0; x < 6; x++) { cout << memoryReader[x]; }

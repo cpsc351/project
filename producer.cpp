@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
   for (int i = 0; i < number_of_lines; i++) {
     char* cstr = new char[newStudent[i].length()];
     strcpy (cstr, newStudent[i].c_str());
-    c//out << cstr << " index i = " << i << "\n";
+    //cout << cstr << " index i = " << i << "\n";
     memcpy((void*)pusher, cstr, newStudent[i].length());
     //cout << stu[i].email << " " << &stu[i] << "\n";
     //cout << &newStudent[i] << " ";
