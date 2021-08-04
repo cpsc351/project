@@ -49,6 +49,18 @@ int readTime(string hours) {
   cout << minutesInt << " minutes\n";
   return minutesInt;
 }
+void getEmailFromArrOfStrings(string line) {
+  string delimiter = " ";
+  string arr[5];
+  int i = 0;
+  stringstream ssin(line);
+
+  while(ssin.good() && i < 5) {
+    ssin >> arr[i];
+    ++i;
+  }
+  cout << arr[0] << "\n";
+}
 void* threaded_pass(void* arg) {
   int maxIndex = 0;
   int minIndex = 0;
@@ -94,12 +106,39 @@ int main(int argc, char* argv[]) {
   }
   //memcpy(shm, _stu, 6);                                  // hardcoded 6
   //(student*)copy = (student*) shm;
-  student* shmCopy = (student*)shm;
-  for (int i = 0; i < 7; i++) {                            //hardcoded 7
-    memcpy(&_stu[i], shmCopy, 64);
-    cout << _stu[i].email << " " << &_stu[i] << "\n";
-    shmCopy++;
-  }
+  //student* shmCopy = (student*)shm;
+  char* shmCopy;
+  // for (int i = 0; i < 7; i++) {                            //hardcoded 7
+  //   memcpy(&_stu[i], shmCopy, 64);
+  //   cout << _stu[i].email << " " << &_stu[i] << "\n";
+  //   shmCopy++;
+  // }
+  //string memoryReader = "";
+  //int memoryReader[6] = {0,0,0,0,0,0};
+
+  // int x = 0;
+  // for (shmCopy = (char*)shm; *shmCopy != EOF; shmCopy++) {
+  //   //memoryReader.push_back(*shmCopy);
+  //   // char y = *shmCopy;
+  //   // memoryReader[x] = atoi(y);
+  //   cout << *shmCopy;
+  //   if (*shmCopy == '\n') {
+  //       x++;
+  //   }
+  // }
+  cout << "consumer recieved: \n";                    //works on hello world basic
+  for (shmCopy = (char*)shm; *shmCopy != EOF; shmCopy++) {                    //works on hello world basic
+    printf("%c", *shmCopy);                                        //works on hello world basic
+  }                                                           //works on hello world basic
+  cout << "\n and thats the end.\n";                    //works on hello world basic
+
+  //for (x = 0; x < 6; x++) { cout << memoryReader[x]; }
+  //cout << x << '\n';
+  //cout << memoryReader;
+  // for (int i = 0; i < number_of_lines; i++) {
+  //   getEmailFromArrOfStrings(newStudent[i]);
+  // }
+
   //cout << (int*)shm;
   //cout << _stu->endDate << " result\n";
   //int arraySize = *_stu.size();
@@ -110,21 +149,21 @@ int main(int argc, char* argv[]) {
   // int remainderRange = arraySize%_n;
   int baseRange = 6/_n;                                //hardcoded 6
   int remainderRange = 6%_n;                           //hardcoded 6
-  
-  *_rangeValues = {baseRange, remainderRange, _n, 1};
-  pthread_t threads[_n];
-  studentreport.open("studentreport.txt");
 
-  for (int i = 1; i <= _n; i++) {
-    rangeValuesLock.lock();
-    pthread_create(&threads[i], NULL, threaded_pass, NULL);
-  }
-  for (int i = 1; i <= _n; i++) {
-    pthread_join(threads[i], NULL);
-  }
-  cout << *_foundMinutes << " minutes found.\n";
-  studentreport << *_foundMinutes << " total minutes found.\n";
-  studentreport.close();
+  *_rangeValues = {baseRange, remainderRange, _n, 1};
+  // pthread_t threads[_n];
+  // studentreport.open("studentreport.txt");
+  //
+  // for (int i = 1; i <= _n; i++) {
+  //   rangeValuesLock.lock();
+  //   pthread_create(&threads[i], NULL, threaded_pass, NULL);
+  // }
+  // for (int i = 1; i <= _n; i++) {
+  //   pthread_join(threads[i], NULL);
+  // }
+  // cout << *_foundMinutes << " minutes found.\n";
+  // studentreport << *_foundMinutes << " total minutes found.\n";
+  // studentreport.close();
   shmdt(shm);
   return 0;
 }
