@@ -30,6 +30,7 @@ static constexpr array<int, 4>* _rangeValues = &myarray;
 static constexpr int* _foundMinutes = &foundMinutes;
 string email;
 
+int readTime(string time);
 string getEndDate(string line);
 string getEmail(string line);
 string getStartTime(string line);
