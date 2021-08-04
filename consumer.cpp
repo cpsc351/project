@@ -19,14 +19,8 @@
 using namespace std;
 
 mutex studentReport, stuLock, rangeValuesLock;
-struct student {
-    string email;
-    string startDate;
-    string startTime;
-    string endDate;
-    string endTime;
-};
-student* _stu;
+
+int arraySize = 0;
 array<int, 4> myarray = {0, 0, 0, 0};
 int foundMinutes = 0;
 ofstream studentreport;
@@ -49,7 +43,7 @@ int readTime(string hours) {
   cout << minutesInt << " minutes\n";
   return minutesInt;
 }
-void getEmailFromArrOfStrings(string line) {
+string getEmail(string line) {
   string delimiter = " ";
   string arr[5];
   int i = 0;
@@ -59,11 +53,48 @@ void getEmailFromArrOfStrings(string line) {
     ssin >> arr[i];
     ++i;
   }
-  cout << arr[0] << "\n";
+  return arr[0];
+}
+string getStartTime(string line) {
+  string delimiter = " ";
+  string arr[5];
+  int i = 0;
+  stringstream ssin(line);
+
+  while(ssin.good() && i < 5) {
+    ssin >> arr[i];
+    ++i;
+  }
+  return arr[2];
+}
+string getEndTime(string line) {
+  string delimiter = " ";
+  string arr[5];
+  int i = 0;
+  stringstream ssin(line);
+
+  while(ssin.good() && i < 5) {
+    ssin >> arr[i];
+    ++i;
+  }
+  return arr[4];
+}
+string getEndDate(string line) {
+  string delimiter = " ";
+  string arr[5];
+  int i = 0;
+  stringstream ssin(line);
+
+  while(ssin.good() && i < 5) {
+    ssin >> arr[i];
+    ++i;
+  }
+  return arr[3];
 }
 void* threaded_pass(void* arg) {
   int maxIndex = 0;
   int minIndex = 0;
+  string* _stu = (string*) arg;
   maxIndex = (_rangeValues->at(3)) * (_rangeValues->at(0));
   minIndex = maxIndex - (_rangeValues->at(0));
   maxIndex--;
@@ -74,13 +105,13 @@ void* threaded_pass(void* arg) {
     maxIndex += _rangeValues->at(1);
   }
   for (int j = minIndex; j <= maxIndex; j++) {
-      if (_stu[j].email == email) {
+      if (getEmail(_stu[j]) == email) {
         //studentReport.lock();
         studentReport.try_lock();
-        int endTime1 = readTime(_stu[j].endTime);
-        int startTime1 = readTime(_stu[j].startTime);
+        int endTime1 = readTime(getEndTime(_stu[j]));
+        int startTime1 = readTime(getStartTime(_stu[j]));
         *_foundMinutes += endTime1 - startTime1;
-        studentreport << _stu[j].email << " " << _stu[j].endDate << " " << endTime1 - startTime1 << " minutes.\n";
+        studentreport << getEmail(_stu[j]) << " " << getEndDate(_stu[j]) << " " << endTime1 - startTime1 << " minutes.\n";
         studentReport.unlock();
       }
       cout << "just searched vect index = " << j << "\n";
@@ -104,28 +135,7 @@ int main(int argc, char* argv[]) {
     cout << "error in shmat\n";
     exit(1);
   }
-  //memcpy(shm, _stu, 6);                                  // hardcoded 6
-  //(student*)copy = (student*) shm;
-  //student* shmCopy = (student*)shm;
   char* shmCopy;
-  // for (int i = 0; i < 7; i++) {                            //hardcoded 7
-  //   memcpy(&_stu[i], shmCopy, 64);
-  //   cout << _stu[i].email << " " << &_stu[i] << "\n";
-  //   shmCopy++;
-  // }
-  //string memoryReader = "";
-  //int memoryReader[6] = {0,0,0,0,0,0};
-
-  // int x = 0;
-  // for (shmCopy = (char*)shm; *shmCopy != EOF; shmCopy++) {
-  //   //memoryReader.push_back(*shmCopy);
-  //   // char y = *shmCopy;
-  //   // memoryReader[x] = atoi(y);
-  //   cout << *shmCopy;
-  //   if (*shmCopy == '\n') {
-  //       x++;
-  //   }
-  // }
   string memoryReader = "";
   int index = 0;
   cout << "consumer recieved: \n";                    //works on hello world basic
@@ -137,44 +147,37 @@ int main(int argc, char* argv[]) {
     }
   }                                                           //works on hello world basic
   string inputArray[index];
+  // array<string> inputArray = to_array(oldArray);
   for (int x = 0; x < index; x++) {
     // make the array meaningful TODO
   }
   cout << memoryReader << "\nindex is " << index;
   cout << "\n and thats the end.\n";                    //works on hello world basic
-
-  //for (x = 0; x < 6; x++) { cout << memoryReader[x]; }
-  //cout << x << '\n';
-  //cout << memoryReader;
-  // for (int i = 0; i < number_of_lines; i++) {
-  //   getEmailFromArrOfStrings(newStudent[i]);
-  // }
-
-  //cout << (int*)shm;
-  //cout << _stu->endDate << " result\n";
-  //int arraySize = *_stu.size();
+  //*_stu = inputArray;
+  string (*_stu)[index];
+  _stu = &inputArray;
+  arraySize = index;
   email = argv[1];
   _n = stoi(argv[2]);
-
-  // int baseRange = arraySize/_n;
-  // int remainderRange = arraySize%_n;
-  int baseRange = 6/_n;                                //hardcoded 6
-  int remainderRange = 6%_n;                           //hardcoded 6
+  int baseRange = arraySize/_n;
+  int remainderRange = arraySize%_n;
+  //int baseRange = 6/_n;                                //hardcoded 6
+  //int remainderRange = 6%_n;                           //hardcoded 6
 
   *_rangeValues = {baseRange, remainderRange, _n, 1};
-  // pthread_t threads[_n];
-  // studentreport.open("studentreport.txt");
-  //
-  // for (int i = 1; i <= _n; i++) {
-  //   rangeValuesLock.lock();
-  //   pthread_create(&threads[i], NULL, threaded_pass, NULL);
-  // }
-  // for (int i = 1; i <= _n; i++) {
-  //   pthread_join(threads[i], NULL);
-  // }
-  // cout << *_foundMinutes << " minutes found.\n";
-  // studentreport << *_foundMinutes << " total minutes found.\n";
-  // studentreport.close();
+  pthread_t threads[_n];
+  studentreport.open("studentreport.txt");
+
+  for (int i = 1; i <= _n; i++) {
+    rangeValuesLock.lock();
+    pthread_create(&threads[i], NULL, threaded_pass, _stu);
+  }
+  for (int i = 1; i <= _n; i++) {
+    pthread_join(threads[i], NULL);
+  }
+  cout << *_foundMinutes << " minutes found.\n";
+  studentreport << *_foundMinutes << " total minutes found.\n";
+  studentreport.close();
   shmdt(shm);
   return 0;
 }
