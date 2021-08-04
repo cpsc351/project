@@ -85,24 +85,26 @@ int main(int argc, char *argv[]) {
 
 
   //put it in shared memory here
-  //student* copy = (student*) shm;
 
-  // char* pusher;
-  // pusher = (char*)shm;
-  // for (int i = 0; i < number_of_lines; i++) {
-  //   memcpy(shm, &newStudent[i], newStudent[i].size());
-  //   //cout << stu[i].email << " " << &stu[i] << "\n";
-  //   cout << &newStudent[i] << " ";
-  //   cout << newStudent[i];
-  //   pusher+=newStudent[i].size();
-  // }
-  // *pusher = EOF;
-  memcpy(shm, "hello world", 11);
   char* pusher;
   pusher = (char*)shm;
-  pusher += 11;
-  *pusher = EOF;
-  //memcpy(shm, stu, number_of_lines);
+  for (int i = 0; i < number_of_lines; i++) {
+    char* cstr = new char[newStudent[i].length() + 1];
+    strcpy (cstr, newStudent[i].c_str());
+    cout << cstr;
+    memcpy(shm, cstr, sizeof(cstr));
+    //cout << stu[i].email << " " << &stu[i] << "\n";
+    //cout << &newStudent[i] << " ";
+    //cout << newStudent[i];
+    pusher+=newStudent[i].size();
+  }
+  // *pusher = EOF;
+  // memcpy(shm, "hello world", 11);                //basic that works
+  // char* pusher;                               //basic that works
+  // pusher = (char*)shm;                           //basic that works
+  // pusher += 11;                               //basic that works
+  // *pusher = EOF;                                //basic that works
+
 
   zoomreport.close();
   zoomReport.unlock();
