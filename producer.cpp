@@ -86,16 +86,21 @@ int main(int argc, char *argv[]) {
 
   //put it in shared memory here
   //student* copy = (student*) shm;
+
+  // char* pusher;
+  // pusher = (char*)shm;
+  // for (int i = 0; i < number_of_lines; i++) {
+  //   memcpy(shm, &newStudent[i], newStudent[i].size());
+  //   //cout << stu[i].email << " " << &stu[i] << "\n";
+  //   cout << &newStudent[i] << " ";
+  //   cout << newStudent[i];
+  //   pusher+=newStudent[i].size();
+  // }
+  // *pusher = EOF;
+  memcpy(shm, "hello world", 11);
   char* pusher;
   pusher = (char*)shm;
-
-  for (int i = 0; i < number_of_lines; i++) {
-    memcpy(shm, &newStudent[i], newStudent[i].size());
-    //cout << stu[i].email << " " << &stu[i] << "\n";
-    cout << &newStudent[i] << " ";
-    cout << newStudent[i];
-    pusher+=newStudent[i].size();
-  }
+  pusher += 11;
   *pusher = EOF;
   //memcpy(shm, stu, number_of_lines);
 

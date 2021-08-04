@@ -115,18 +115,25 @@ int main(int argc, char* argv[]) {
   // }
   //string memoryReader = "";
   //int memoryReader[6] = {0,0,0,0,0,0};
-  int x = 0;
+
+  // int x = 0;
+  // for (shmCopy = (char*)shm; *shmCopy != EOF; shmCopy++) {
+  //   //memoryReader.push_back(*shmCopy);
+  //   // char y = *shmCopy;
+  //   // memoryReader[x] = atoi(y);
+  //   cout << *shmCopy;
+  //   if (*shmCopy == '\n') {
+  //       x++;
+  //   }
+  // }
+
   for (shmCopy = (char*)shm; *shmCopy != EOF; shmCopy++) {
-    //memoryReader.push_back(*shmCopy);
-    // char y = *shmCopy;
-    // memoryReader[x] = atoi(y);
-    cout << *shmCopy;
-    if (*shmCopy == '\n') {
-        x++;
-    }
+    printf("%c", *shmCopy);
   }
+  cout << " end.\n";
+
   //for (x = 0; x < 6; x++) { cout << memoryReader[x]; }
-  cout << x << '\n';
+  //cout << x << '\n';
   //cout << memoryReader;
   // for (int i = 0; i < number_of_lines; i++) {
   //   getEmailFromArrOfStrings(newStudent[i]);
