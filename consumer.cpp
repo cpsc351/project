@@ -148,8 +148,15 @@ int main(int argc, char* argv[]) {
   }                                                           //works on hello world basic
   string inputArray[index];
   // array<string> inputArray = to_array(oldArray);
-  for (int x = 0; x < index; x++) {
-    // make the array meaningful TODO
+  stringstream memoryRead(memoryReader);
+  // for (int x = 0; x < index; x++) {
+  //   // make the array meaningful TODO
+  // }
+  string line;
+  int y = 0;
+  while (getline(memoryRead, line)) {
+    inputArray[y] = line;
+    y++;
   }
   cout << memoryReader << "\nindex is " << index;
   cout << "\n and thats the end.\n";                    //works on hello world basic
