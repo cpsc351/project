@@ -126,11 +126,11 @@ int main(int argc, char* argv[]) {
   //       x++;
   //   }
   // }
-
-  for (shmCopy = (char*)shm; *shmCopy != EOF; shmCopy++) {
-    printf("%c", *shmCopy);
-  }
-  cout << " end.\n";
+  cout << "consumer recieved: \n";                    //works on hello world basic
+  for (shmCopy = (char*)shm; *shmCopy != EOF; shmCopy++) {                    //works on hello world basic
+    printf("%c", *shmCopy);                                        //works on hello world basic
+  }                                                           //works on hello world basic
+  cout << "\n and thats the end.\n";                    //works on hello world basic
 
   //for (x = 0; x < 6; x++) { cout << memoryReader[x]; }
   //cout << x << '\n';

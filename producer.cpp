@@ -89,10 +89,10 @@ int main(int argc, char *argv[]) {
   char* pusher;
   pusher = (char*)shm;
   for (int i = 0; i < number_of_lines; i++) {
-    char* cstr = new char[newStudent[i].length() + 1];
+    char* cstr = new char[newStudent[i].length()];
     strcpy (cstr, newStudent[i].c_str());
     cout << cstr;
-    memcpy(shm, cstr, sizeof(cstr));
+    memcpy(shm, cstr, newStudent[i].capacity());
     //cout << stu[i].email << " " << &stu[i] << "\n";
     //cout << &newStudent[i] << " ";
     //cout << newStudent[i];
