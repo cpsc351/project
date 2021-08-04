@@ -91,14 +91,15 @@ int main(int argc, char *argv[]) {
   for (int i = 0; i < number_of_lines; i++) {
     char* cstr = new char[newStudent[i].length()];
     strcpy (cstr, newStudent[i].c_str());
-    cout << cstr;
-    memcpy(shm, cstr, newStudent[i].capacity());
+    c//out << cstr << " index i = " << i << "\n";
+    memcpy((void*)pusher, cstr, newStudent[i].length());
     //cout << stu[i].email << " " << &stu[i] << "\n";
     //cout << &newStudent[i] << " ";
     //cout << newStudent[i];
-    pusher+=newStudent[i].size();
+    pusher+=newStudent[i].length();
+    delete[] cstr;
   }
-  // *pusher = EOF;
+  //*pusher = EOF;
   // memcpy(shm, "hello world", 11);                //basic that works
   // char* pusher;                               //basic that works
   // pusher = (char*)shm;                           //basic that works
