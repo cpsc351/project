@@ -30,67 +30,11 @@ static constexpr array<int, 4>* _rangeValues = &myarray;
 static constexpr int* _foundMinutes = &foundMinutes;
 string email;
 
+string getEndDate(string line);
+string getEmail(string line);
+string getStartTime(string line);
+string getEndTime(string line);
 
-int readTime(string hours) {
-  string minutes = hours;
-  hours.erase(2, 3);
-  minutes.erase(0, 3);
-  cout << hours << ":" << minutes << "\n";
-  int hoursInt = stoi(hours);
-  int minutesInt = stoi(minutes);
-  hoursInt = hoursInt * 60;
-  minutesInt += hoursInt;
-  cout << minutesInt << " minutes\n";
-  return minutesInt;
-}
-string getEmail(string line) {
-  string delimiter = " ";
-  string arr[5];
-  int i = 0;
-  stringstream ssin(line);
-
-  while(ssin.good() && i < 5) {
-    ssin >> arr[i];
-    ++i;
-  }
-  return arr[0];
-}
-string getStartTime(string line) {
-  string delimiter = " ";
-  string arr[5];
-  int i = 0;
-  stringstream ssin(line);
-
-  while(ssin.good() && i < 5) {
-    ssin >> arr[i];
-    ++i;
-  }
-  return arr[2];
-}
-string getEndTime(string line) {
-  string delimiter = " ";
-  string arr[5];
-  int i = 0;
-  stringstream ssin(line);
-
-  while(ssin.good() && i < 5) {
-    ssin >> arr[i];
-    ++i;
-  }
-  return arr[4];
-}
-string getEndDate(string line) {
-  string delimiter = " ";
-  string arr[5];
-  int i = 0;
-  stringstream ssin(line);
-
-  while(ssin.good() && i < 5) {
-    ssin >> arr[i];
-    ++i;
-  }
-  return arr[3];
-}
 void* threaded_pass(void* arg) {
   int maxIndex = 0;
   int minIndex = 0;
@@ -114,13 +58,14 @@ void* threaded_pass(void* arg) {
         studentreport << getEmail(_stu[j]) << " " << getEndDate(_stu[j]) << " " << endTime1 - startTime1 << " minutes.\n";
         studentReport.unlock();
       }
-      cout << "just searched vect index = " << j << "\n";
+      cout << "just searched array index = " << j << "\n";
       cout << *_foundMinutes << " total minutes found.\n";
     }
     (_rangeValues->at(3))++;
     rangeValuesLock.unlock();
     return 0;
 }
+
 int main(int argc, char* argv[]) {
   int shmid;
   key_t key = 886699586;
@@ -138,7 +83,6 @@ int main(int argc, char* argv[]) {
   char* shmCopy;
   string memoryReader = "";
   int index = 0;
-  cout << "consumer recieved: \n";                    //works on hello world basic
   for (shmCopy = (char*)shm; *shmCopy != EOF; shmCopy++) {                    //works on hello world basic
     //printf("%c", *shmCopy);                                        //works on hello world basic
     memoryReader.push_back(*shmCopy);
@@ -147,20 +91,13 @@ int main(int argc, char* argv[]) {
     }
   }                                                           //works on hello world basic
   string inputArray[index];
-  // array<string> inputArray = to_array(oldArray);
   stringstream memoryRead(memoryReader);
-  // for (int x = 0; x < index; x++) {
-  //   // make the array meaningful TODO
-  // }
   string line;
   int y = 0;
   while (getline(memoryRead, line)) {
     inputArray[y] = line;
     y++;
   }
-  cout << memoryReader << "\nindex is " << index;
-  cout << "\n and thats the end.\n";                    //works on hello world basic
-  //*_stu = inputArray;
   string (*_stu)[index];
   _stu = &inputArray;
   arraySize = index;
@@ -168,9 +105,6 @@ int main(int argc, char* argv[]) {
   _n = stoi(argv[2]);
   int baseRange = arraySize/_n;
   int remainderRange = arraySize%_n;
-  //int baseRange = 6/_n;                                //hardcoded 6
-  //int remainderRange = 6%_n;                           //hardcoded 6
-
   *_rangeValues = {baseRange, remainderRange, _n, 1};
   pthread_t threads[_n];
   studentreport.open("studentreport.txt");
@@ -186,5 +120,61 @@ int main(int argc, char* argv[]) {
   studentreport << *_foundMinutes << " total minutes found.\n";
   studentreport.close();
   shmdt(shm);
+  shmctl(shmid, IPC_RMID, NULL);
   return 0;
+}
+
+int readTime(string hours) {
+  string minutes = hours;
+  hours.erase(2, 3);
+  minutes.erase(0, 3);
+  int hoursInt = stoi(hours);
+  int minutesInt = stoi(minutes);
+  hoursInt = hoursInt * 60;
+  minutesInt += hoursInt;
+  return minutesInt;
+}
+string getEmail(string line) {
+  string delimiter = " ";
+  string arr[5];
+  int i = 0;
+  stringstream ssin(line);
+  while(ssin.good() && i < 5) {
+    ssin >> arr[i];
+    ++i;
+  }
+  return arr[0];
+}
+string getStartTime(string line) {
+  string delimiter = " ";
+  string arr[5];
+  int i = 0;
+  stringstream ssin(line);
+  while(ssin.good() && i < 5) {
+    ssin >> arr[i];
+    ++i;
+  }
+  return arr[2];
+}
+string getEndTime(string line) {
+  string delimiter = " ";
+  string arr[5];
+  int i = 0;
+  stringstream ssin(line);
+  while(ssin.good() && i < 5) {
+    ssin >> arr[i];
+    ++i;
+  }
+  return arr[4];
+}
+string getEndDate(string line) {
+  string delimiter = " ";
+  string arr[5];
+  int i = 0;
+  stringstream ssin(line);
+  while(ssin.good() && i < 5) {
+    ssin >> arr[i];
+    ++i;
+  }
+  return arr[3];
 }
